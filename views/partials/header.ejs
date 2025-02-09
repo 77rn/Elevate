@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevate - Premium Lifestyle</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="font-['helvetica_now_display']">
+    <nav class="w-full border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+
+                <a href="/shop" class="flex items-center gap-2">
+                    <i class="ri-arrow-up-double-line text-2xl"></i>
+                    <h3 class="text-xl font-semibold tracking-tight">Elevate</h3>
+                </a>
+
+                <div class="flex items-center gap-8">
+                    <% if (typeof user !== "undefined" && user) { %>
+                        <a href="/shop" class="text-gray-700 hover:text-black transition-colors">Shop</a>
+
+                        <a href="/cart" class="relative group">
+                            <div class="flex items-center gap-1 text-gray-700 group-hover:text-black transition-colors">
+                                <i class="ri-shopping-bag-line text-xl"></i>
+                                <span>Cart</span>
+                                <div class="absolute -top-2 -right-4 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                                    <%= user.cart.length || 0 %>
+                                </div>
+                            </div>
+                        </a>
+                    <% } %>
+
+                    <% if (typeof user !== "undefined" && user) { %>
+                        <div class="relative group">
+                            <button class="flex items-center gap-1 text-gray-700 group-hover:text-black transition-colors">
+                                <i class="ri-user-line text-xl"></i>
+                                <span><%= user.fullname %></span>
+                                <i class="ri-arrow-down-s-line"></i>
+                            </button>
+                            <div class="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                                <div class="py-2">
+                                    <a href="/account/profile/<%= user._id %>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                    <div class="border-t my-1"></div>
+                                    <a href="/users/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <a href="/login" class="text-gray-700 hover:text-black transition-colors">Login</a>
+                        <a href="/register" class="text-gray-700 hover:text-black transition-colors">Register</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+
+</html>
