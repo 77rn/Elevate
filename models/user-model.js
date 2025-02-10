@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-    fullname: String,
-    email: String,
-    password: String,
+    fullname: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 8
+    },
     cart: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'

@@ -1,4 +1,37 @@
+
 <%- include('./partials/header') %>
+<% if(success.length > 0) { %>
+    <div id="successMessage" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500 transition-opacity duration-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= success %>
+        </span>
+    </div>
+<% } %>
+
+<% if(error.length > 0) { %>
+    <div id="errorMessage" class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500 transition-opacity duration-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= error %>
+        </span>
+    </div>
+<% } %>
+
+<script>
+    setTimeout(() => {
+        const successMessage = document.getElementById('successMessage');
+        if (successMessage) {
+            successMessage.style.opacity = '0';
+            setTimeout(() => successMessage.remove(), 500); 
+        }
+
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+            errorMessage.style.opacity = '0';
+            setTimeout(() => errorMessage.remove(), 500); 
+        }
+    }, 3000); 
+</script>
+
 
 
 

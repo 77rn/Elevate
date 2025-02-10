@@ -5,7 +5,7 @@ const productModel = require('../models/product-model');
 const userModel = require("../models/user-model");
 
 router.get("/",  (req, res) => {
-    res.render("index", { error: req.flash('error'), loggedin: false });
+    res.render("index", { error: req.flash('error'),success : req.flash('success'), loggedin: false });
 });
 
 router.get('/shop', isLoggedin, async (req, res) => {
@@ -74,7 +74,7 @@ router.get("/cart/add/:id", isLoggedin, async (req, res)=>{
     user.cart.push(req.params.id);
     await user.save();
     req.flash("success", "Added to cart successfully");
-    res.redirect('/shop')
+    res.redirect('/shop');
 })
 
 router.get("/cart", isLoggedin, async (req, res)=>{
@@ -83,5 +83,25 @@ router.get("/cart", isLoggedin, async (req, res)=>{
     
     res.render("cart", {user})
 })
+
+router.delete('/cart/remove/:id',isLoggedin, async (req, res) => {
+    try {
+        
+        const productId = req.params.id;
+
+        let user = await userModel.findOne({email: req.user.email});
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.cart = user.cart.filter(item => item._id.toString() !== productId);
+        await user.save();
+
+        res.status(200).json({ message: 'Product removed from cart' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
 
 module.exports = router;

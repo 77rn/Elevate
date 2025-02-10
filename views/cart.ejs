@@ -12,7 +12,15 @@
                     <div class="p-4" style="background-color: <%= product.panelcolor %>;">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="text-lg font-medium" style="color: <%= product.textcolor %>;"><%= product.name %></h3>
-                            
+                         
+                            <button 
+                                onclick="removeProduct('<%= product._id %>')" 
+                                class="text-white-500 hover:text-red-700 focus:outline-none"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm" style="color: <%= product.textcolor %>;">Net Total</span>
@@ -23,39 +31,65 @@
                 <% }) %>
             </div>
         </div>
+        
+        
+        <script>
+            function removeProduct(productId) {
+                fetch(`/cart/remove/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); 
+                    } else {
+                        alert("Failed to remove the product.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        </script>
 
-        <div class="w-[40%] bg-gray-50 p-6 rounded-lg h-fit">
-            <h3 class="text-xl font-semibold mb-6">Price Breakdown</h3>
-            <div class="space-y-4">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Total MRP</span>
-                    <span>₹ <%= user.cart.reduce((total, product) => total + product.price, 0) %></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Discount on MRP</span>
-                    <span class="text-green-600">-₹ <%= user.cart.reduce((total, product) => total + product.discount, 0) %></span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Platform Fee</span>
-                    <span>₹ 20</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Shipping Fee</span>
-                    <span class="text-green-600">FREE</span>
-                </div>
-                <div class="border-t border-gray-200 pt-4 mt-4">
-                    <div class="flex justify-between">
-                        <span class="text-lg font-semibold">Total Amount</span>
-                        <span class="text-lg font-semibold text-green-600">
-                            ₹ <%= user.cart.reduce((total, product) => total + product.price - product.discount, 0) + 20 %>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <button class="w-full bg-black text-white py-3 rounded-lg mt-6 font-medium">
-                Proceed to Checkout
-            </button>
+<div class="w-[40%] bg-gray-50 p-6 rounded-lg h-fit">
+    <h3 class="text-xl font-semibold mb-6">Price Breakdown</h3>
+    <div class="space-y-4">
+        <div class="flex justify-between">
+            <span class="text-gray-600">Total MRP</span>
+            <span>₹ <%= user.cart.reduce((total, product) => total + product.price, 0) %></span>
         </div>
+        <div class="flex justify-between">
+            <span class="text-gray-600">Discount on MRP</span>
+            <span class="text-green-600">-₹ <%= user.cart.reduce((total, product) => total + product.discount, 0) %></span>
+        </div>
+        <% let totalMRP = user.cart.reduce((total, product) => total + product.price, 0); %>
+        <% let discount = user.cart.reduce((total, product) => total + product.discount, 0); %>
+        <% let platformFee = totalMRP > 0 ? 20 : 0; %>
+
+        <div class="flex justify-between">
+            <span class="text-gray-600">Platform Fee</span>
+            <span>₹ <%= platformFee %></span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-600">Shipping Fee</span>
+            <span class="text-green-600">FREE</span>
+        </div>
+        <div class="border-t border-gray-200 pt-4 mt-4">
+            <div class="flex justify-between">
+                <span class="text-lg font-semibold">Total Amount</span>
+                <span class="text-lg font-semibold text-green-600">
+                    ₹ <%= totalMRP - discount + platformFee %>
+                </span>
+            </div>
+        </div>
+    </div>
+    <button class="w-full bg-black text-white py-3 rounded-lg mt-6 font-medium">
+        Proceed to Checkout
+    </button>
+</div>
     </div>
 </div>
 <%- include('./partials/footer') %>
